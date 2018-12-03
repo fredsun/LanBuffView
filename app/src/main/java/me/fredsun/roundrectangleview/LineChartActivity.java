@@ -3,6 +3,7 @@ package me.fredsun.roundrectangleview;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -34,5 +35,6 @@ public class LineChartActivity extends AppCompatActivity {
         kcalData.add(new KcalData(55, 20));
         lineChartView.init(55, 40, kcalData);
         lineChartView.startAnim();
+        Log.i("test", "test");
     }
 }
