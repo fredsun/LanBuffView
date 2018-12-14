@@ -193,9 +193,9 @@ public class LineChartView extends View {
         pathBrokenLineDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
         pathShadowDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
 
-        for (int i =0; i<=xTotalValue/5; i++){
-            pathBrokenLine.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i*5 , -yBorderMargin-(kcalData.get(i).getKcal()* (mHeight-yBorderMargin)*0.8f / yTotalValue ));
-            pathShadow.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i*5 , -yBorderMargin-(kcalData.get(i).getKcal() * (mHeight-yBorderMargin)*0.8f / yTotalValue)+paintBrokenLine.getStrokeWidth()/2);
+        for (int i =0; i<=xTotalValue; i++){
+            pathBrokenLine.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal()* (mHeight-yBorderMargin)*0.8f / yTotalValue ));
+            pathShadow.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal() * (mHeight-yBorderMargin)*0.8f / yTotalValue)+paintBrokenLine.getStrokeWidth()/2);
         }
         pathMeasureBrokenLine.setPath(pathBrokenLine, false);
         pathMeasureShadow.setPath(pathShadow, false);
