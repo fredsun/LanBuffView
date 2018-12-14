@@ -267,7 +267,10 @@ public class PieChartHollowView extends View {
                 canvas.drawArc(rectF, data.getCurrentStartAngle(), data.getAngle(), false, mPaint);
                 currentStartAngle += data.getAngle();
                 //绘制文字
-                drawText(canvas, data.getCurrentStartAngle()+data.getAngle()/2, (int) data.getValue()+"%", minAngle-1);
+                if (data.getPercentage()!=0){
+
+                    drawText(canvas, data.getCurrentStartAngle()+data.getAngle()/2, (int)(data.getPercentage()*100)+"%", minAngle-1);
+                }
                 Log.i("data.getAngle", data.getValue() + " : " + data.getCurrentStartAngle()+" : "+ data.getAngle());
             } else if (mDrawWay == COUNT) {
                 mPaint.setStyle(Paint.Style.FILL);
@@ -277,7 +280,9 @@ public class PieChartHollowView extends View {
                 mPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawArc(rectFOut, currentStartAngle, data.getAngle(), false, mPaint);
                 //7. 绘制文字
-                drawText(canvas, currentStartAngle+data.getAngle()/2, data.getValue()+"", data.getAngle());
+                if (data.getPercentage()!=0) {
+                    drawText(canvas, currentStartAngle + data.getAngle() / 2, (int) (data.getPercentage() * 100) + "", data.getAngle());
+                }
                 //8.绘制下一块扇形时先将角度加上当前扇形的角度
                 currentStartAngle += data.getAngle();
             }
