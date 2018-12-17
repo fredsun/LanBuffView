@@ -51,7 +51,8 @@ public class LineChartView extends View {
     private int mWidth;
     private int yTotalValue;
     private int xTotalValue;
-    private List<Integer> yValueArray, xValueArray;
+    private List<Float> yValueArray;
+    private List<Integer> xValueArray;
     private List<KcalData> kcalData;
     private float mAnimatorValue;
     private float[] pos = new float[2];
@@ -134,10 +135,22 @@ public class LineChartView extends View {
 //        this.yValueArray = new ArrayList<>();
 
         //单位:分钟
+        if (xTotalValue<6){
+            xTotalValue = 6;
+        }
         this.xTotalValue = xTotalValue;
+
         //单位:卡路里
         this.yTotalValue = yTotalValue;
-        this.kcalData = kcalData;
+        if (kcalData == null || kcalData.size()==0){
+            List<KcalData> tempDataList =  new ArrayList<>();
+            tempDataList.add(new KcalData(0,0));
+            this.kcalData = tempDataList;
+        }else {
+            kcalData.add(0, new KcalData(0,0));
+            this.kcalData = kcalData;
+        }
+
     }
 
     public void startAnim(){
@@ -152,16 +165,36 @@ public class LineChartView extends View {
 //        yTotalValue = 20;
 //        xTotalValue = 60;
         yValueArray = new ArrayList<>();
-        int yAverage = yTotalValue / 4; //5
+        float yAverage = yTotalValue / 4.0f; //5
         for (int i =0; i<5; i++){ //y轴4个刻度
             yValueArray.add(yAverage * i);
         }
 
         xValueArray = new ArrayList<>();
-        int xAverage = xTotalValue /6;
-        for (int i =0; i<6; i++){
-            xValueArray.add(xAverage * i);  ;
+        if (xTotalValue%6==0){
+            int xAverage = xTotalValue /6;
+            for (int i =0; i<6; i++){
+                if (xAverage == 0){
+                    xValueArray.add(i);
+                }else {
+                    xValueArray.add(xAverage * i);
+                }
+
+            }
+        }else {
+            while(xTotalValue%6!=0){
+                xTotalValue++;
+            }
+            int xAverage = xTotalValue /6;
+            for (int i =0; i<6; i++){
+                if (xAverage == 0){
+                    xValueArray.add(i);
+                }else {
+                    xValueArray.add(xAverage * i);
+                }
+            }
         }
+
 
 //        kcalData = new ArrayList<>();
 //        for (int i=0; i<60; i++){
@@ -193,7 +226,10 @@ public class LineChartView extends View {
         pathBrokenLineDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
         pathShadowDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
 
-        for (int i =0; i<=xTotalValue; i++){
+        for (int i =0; i<kcalData.size(); i++){
+            if (kcalData.get(i).getKcal() == -1){
+                return;
+            }
             pathBrokenLine.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal()* (mHeight-yBorderMargin)*0.8f / yTotalValue ));
             pathShadow.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal() * (mHeight-yBorderMargin)*0.8f / yTotalValue)+paintBrokenLine.getStrokeWidth()/2);
         }
@@ -212,7 +248,7 @@ public class LineChartView extends View {
         canvas.drawPath(pathShadowDst, paintShadow);
 
         for (int i =1; i < yValueArray.size(); i++){
-            Integer yValue = yValueArray.get(i);
+            String yValue = yValueArray.get(i).intValue()+"";
             //画y轴刻度
             canvas.drawText(yValue.toString(), borderMargin * 1.5f, -(mHeight-yBorderMargin)/5*i-borderMargin, paintBorderLeftText);
             //画x轴虚线
@@ -223,6 +259,7 @@ public class LineChartView extends View {
         //画左侧y轴
         canvas.drawLine(borderMargin * 2.0f, -yBorderMargin, borderMargin * 2.0f, -mHeight, paintBorder);
 
+        //画x轴刻度
         for (int i = 1; i < xValueArray.size(); i++){
             Integer xValue = xValueArray.get(i);
             canvas.drawText(xValue.toString()+"分钟", mWidth/6*i+borderMargin, -borderMargin*0.5f, paintBorderBottomText);
