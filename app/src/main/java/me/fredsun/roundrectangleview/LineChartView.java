@@ -89,7 +89,7 @@ public class LineChartView extends View {
         paintBorderBottomText.setTextAlign(Paint.Align.CENTER);
         borderMargin = 30;
         xBorderMargin = borderMargin * 2.0f;
-        yBorderMargin = borderMargin * 1.5f;
+        yBorderMargin = borderMargin * 2.0f;
         //x轴虚线
         pathDottedLine = new Path();
         //x轴虚线
@@ -250,10 +250,10 @@ public class LineChartView extends View {
         for (int i =1; i < yValueArray.size(); i++){
             String yValue = yValueArray.get(i).intValue()+"";
             //画y轴刻度
-            canvas.drawText(yValue.toString(), borderMargin * 1.5f, -(mHeight-yBorderMargin)/5*i-borderMargin, paintBorderLeftText);
+            canvas.drawText(yValue.toString(), borderMargin * 1.5f, -(mHeight-yBorderMargin)/5*i-yBorderMargin, paintBorderLeftText);
             //画x轴虚线
-            pathDottedLine.moveTo(borderMargin * 2.0f, -(mHeight-yBorderMargin)/5*i-borderMargin);
-            pathDottedLine.lineTo(mWidth, -(mHeight-yBorderMargin)/5*i-borderMargin);
+            pathDottedLine.moveTo(borderMargin * 2.0f, -(mHeight-yBorderMargin)/5*i-yBorderMargin);
+            pathDottedLine.lineTo(mWidth, -(mHeight-yBorderMargin)/5*i-yBorderMargin);
             canvas.drawPath(pathDottedLine, paintDottedLine);
         }
         //画左侧y轴
