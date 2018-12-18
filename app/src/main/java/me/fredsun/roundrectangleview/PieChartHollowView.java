@@ -59,6 +59,8 @@ public class PieChartHollowView extends View {
     private Paint mTextPaint;
     private float r;
     private int mBorderWidth;
+    private Paint mNoDataCenterTextPaint;
+    private boolean flagHasData;
 
     public PieChartHollowView(Context context) {
         this(context, null);
@@ -148,6 +150,14 @@ public class PieChartHollowView extends View {
         mTextPaint.setStyle(Paint.Style.STROKE);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
+
+        mNoDataCenterTextPaint = new Paint();
+        mNoDataCenterTextPaint.setColor(Color.parseColor("#D8D8D8"));
+        mNoDataCenterTextPaint.setAntiAlias(true);
+        mNoDataCenterTextPaint.setStyle(Paint.Style.STROKE);
+        mNoDataCenterTextPaint.setTextAlign(Paint.Align.CENTER);
+
+
     }
 
     /**
@@ -191,7 +201,23 @@ public class PieChartHollowView extends View {
         sumValue = 0;
         this.mData = mData;
         initData(mData);
-        valueAnimator.start();
+        flagHasData = false;
+        for (PieData pieData:mData){
+            if (pieData.getValue()!=0){
+                flagHasData = true;
+            }
+        }
+        if (flagHasData){
+            valueAnimator.start();
+        }else {
+//            PieData pieData = new PieData("a", 1, Color.parseColor("#AE02A9"));
+//            pieData.setAngle(360);
+//            pieData.setPercentage(1);
+//            mData.clear();
+//            mData.add(0, pieData);
+
+        }
+        postInvalidate();
         invalidate();
     }
 
@@ -238,6 +264,7 @@ public class PieChartHollowView extends View {
         mWidth = w;
         mHeight = h;
         mBorderWidth = (int)(w * 0.2f);
+        mNoDataCenterTextPaint.setTextSize(mWidth/12);
     }
 
     @Override
@@ -264,12 +291,17 @@ public class PieChartHollowView extends View {
             if (mDrawWay == PART) {
                 mPaint.setStyle(Paint.Style.STROKE);
                 mPaint.setStrokeWidth(mBorderWidth);
-                canvas.drawArc(rectF, data.getCurrentStartAngle(), data.getAngle(), false, mPaint);
-                currentStartAngle += data.getAngle();
-                //绘制文字
-                if (data.getPercentage()!=0){
-
-                    drawText(canvas, data.getCurrentStartAngle()+data.getAngle()/2, (int)(data.getPercentage()*100)+"%", minAngle-1);
+                if (!flagHasData){
+                    mPaint.setColor(Color.parseColor("#D8D8D8"));
+                    canvas.drawArc(rectF, -90, 360, false, mPaint);
+                    canvas.drawText("暂无数据", 0, 0, mNoDataCenterTextPaint);
+                }else {
+                    canvas.drawArc(rectF, data.getCurrentStartAngle(), data.getAngle(), false, mPaint);
+                    currentStartAngle += data.getAngle();
+                    //绘制文字
+                    if (data.getPercentage()!=0){
+                        drawText(canvas, data.getCurrentStartAngle()+data.getAngle()/2, (int)(data.getPercentage()*100)+"%", minAngle-1);
+                    }
                 }
                 Log.i("data.getAngle", data.getValue() + " : " + data.getCurrentStartAngle()+" : "+ data.getAngle());
             } else if (mDrawWay == COUNT) {
