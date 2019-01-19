@@ -79,17 +79,17 @@ public class LineChartView extends View {
         paintBorderLeftText = new Paint();
         paintBorderLeftText.setStyle(Paint.Style.FILL);
         paintBorderLeftText.setColor(Color.parseColor("#9B9B9B"));
-        paintBorderLeftText.setTextSize(30);
+        paintBorderLeftText.setTextSize(35);
         paintBorderLeftText.setTextAlign(Paint.Align.RIGHT);
         //底部x轴刻度
         paintBorderBottomText = new Paint();
         paintBorderBottomText.setStyle(Paint.Style.FILL);
         paintBorderBottomText.setColor(Color.parseColor("#9B9B9B"));
-        paintBorderBottomText.setTextSize(30);
+        paintBorderBottomText.setTextSize(35);
         paintBorderBottomText.setTextAlign(Paint.Align.CENTER);
         borderMargin = 30;
         xBorderMargin = borderMargin * 2.0f;
-        yBorderMargin = borderMargin * 2.0f;
+        yBorderMargin = borderMargin * 2.2f;
         //x轴虚线
         pathDottedLine = new Path();
         //x轴虚线
@@ -177,7 +177,7 @@ public class LineChartView extends View {
                 if (xAverage == 0){
                     xValueArray.add(i);
                 }else {
-                    xValueArray.add(xAverage * i);
+                    xValueArray.add(xAverage * i * 2);
                 }
 
             }
@@ -190,7 +190,7 @@ public class LineChartView extends View {
                 if (xAverage == 0){
                     xValueArray.add(i);
                 }else {
-                    xValueArray.add(xAverage * i);
+                    xValueArray.add(xAverage * i * 2);
                 }
             }
         }
@@ -221,17 +221,20 @@ public class LineChartView extends View {
         canvas.translate(0, mHeight);
 
         //折线与阴影区path偏移
-        pathBrokenLine.moveTo(borderMargin * 2.0f, -yBorderMargin);
-        pathShadow.moveTo(borderMargin * 2.0f, -yBorderMargin);
-        pathBrokenLineDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
-        pathShadowDst.moveTo(borderMargin * 2.0f, -yBorderMargin);
+        pathBrokenLine.moveTo(borderMargin * 3.0f, -yBorderMargin);
+        pathShadow.moveTo(borderMargin * 3.0f, -yBorderMargin);
+        pathBrokenLineDst.moveTo(borderMargin * 3.0f, -yBorderMargin);
+        pathShadowDst.moveTo(borderMargin * 3.0f, -yBorderMargin);
+        if (kcalData == null){
 
-        for (int i =0; i<kcalData.size(); i++){
-            if (kcalData.get(i).getKcal() == -1){
-                return;
+        }else {
+            for (int i = 0; i < kcalData.size(); i++) {
+                if (kcalData.get(i).getKcal() == -1) {
+                    return;
+                }
+                pathBrokenLine.lineTo(borderMargin * 3.0f + (mWidth - borderMargin * 3.0f) / xTotalValue * i, -yBorderMargin - (kcalData.get(i).getKcal() * (mHeight - yBorderMargin) * 0.8f / yTotalValue));
+                pathShadow.lineTo(borderMargin * 3.0f + (mWidth - borderMargin * 3.0f) / xTotalValue * i, -yBorderMargin - (kcalData.get(i).getKcal() * (mHeight - yBorderMargin) * 0.8f / yTotalValue) + paintBrokenLine.getStrokeWidth() / 2);
             }
-            pathBrokenLine.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal()* (mHeight-yBorderMargin)*0.8f / yTotalValue ));
-            pathShadow.lineTo(borderMargin * 2.0f + (mWidth-borderMargin * 2.0f)/xTotalValue * i , -yBorderMargin-(kcalData.get(i).getKcal() * (mHeight-yBorderMargin)*0.8f / yTotalValue)+paintBrokenLine.getStrokeWidth()/2);
         }
         pathMeasureBrokenLine.setPath(pathBrokenLine, false);
         pathMeasureShadow.setPath(pathShadow, false);
@@ -250,14 +253,14 @@ public class LineChartView extends View {
         for (int i =1; i < yValueArray.size(); i++){
             String yValue = yValueArray.get(i).intValue()+"";
             //画y轴刻度
-            canvas.drawText(yValue.toString(), borderMargin * 1.5f, -(mHeight-yBorderMargin)/5*i-yBorderMargin, paintBorderLeftText);
+            canvas.drawText(yValue.toString(), borderMargin * 2.5f, -(mHeight-yBorderMargin)/5*i-yBorderMargin, paintBorderLeftText);
             //画x轴虚线
-            pathDottedLine.moveTo(borderMargin * 2.0f, -(mHeight-yBorderMargin)/5*i-yBorderMargin);
+            pathDottedLine.moveTo(borderMargin * 3.0f, -(mHeight-yBorderMargin)/5*i-yBorderMargin);
             pathDottedLine.lineTo(mWidth, -(mHeight-yBorderMargin)/5*i-yBorderMargin);
             canvas.drawPath(pathDottedLine, paintDottedLine);
         }
         //画左侧y轴
-        canvas.drawLine(borderMargin * 2.0f, -yBorderMargin, borderMargin * 2.0f, -mHeight, paintBorder);
+        canvas.drawLine(borderMargin * 3.0f, -yBorderMargin, borderMargin * 3.0f, -mHeight, paintBorder);
 
         //画x轴刻度
         for (int i = 1; i < xValueArray.size(); i++){
@@ -265,6 +268,6 @@ public class LineChartView extends View {
             canvas.drawText(xValue.toString()+"分钟", mWidth/6*i+borderMargin, -borderMargin*0.5f, paintBorderBottomText);
         }
         //画底部x轴
-        canvas.drawLine(borderMargin * 2.0f, -yBorderMargin, mWidth, -yBorderMargin, paintBorder);
+        canvas.drawLine(borderMargin * 3.0f, -yBorderMargin, mWidth, -yBorderMargin, paintBorder);
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,61 +20,36 @@ public class LineChartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_chart);
         LineChartView lineChartView = (LineChartView)findViewById(R.id.line_chart);
-        List<Integer> integerList = new ArrayList<>();
-        ArrayList<KcalData> kcalData = new ArrayList<>();
-//        kcalData.add(new KcalData(0, 5));
-//        kcalData.add(new KcalData(5, 10));
-//        kcalData.add(new KcalData(10, 5));
-//        kcalData.add(new KcalData(15, 10));
-//        kcalData.add(new KcalData(20, 5));
-//        kcalData.add(new KcalData(25, 10));
-//        kcalData.add(new KcalData(30, 15));
-//        kcalData.add(new KcalData(35, 20));
-//        kcalData.add(new KcalData(40, 15));
-//        kcalData.add(new KcalData(45, 20));
-//        kcalData.add(new KcalData(50, 40));
-//        kcalData.add(new KcalData(55, 20));
-//        lineChartView.init(55, 40, kcalData);
+        List<Integer> kcalData = new ArrayList<>();
+        ArrayList<KcalData> kcalChartData = new ArrayList<>();
 
-//        integerList.add(0);
-//        integerList.add(5);
-//        integerList.add(11);
-//        integerList.add(37);
-//        integerList.add(82);
-//        integerList.add(99);
-//        integerList.add(40);
-//        int maxValue = 0;
-//        for (int i=0; i < integerList.size(); i++){
-//            int currentValue = 0;
-//            if (i==0 || integerList.get(i) < integerList.get(i-1)){
-//                currentValue = 0;
-//            }else {
-//                currentValue = integerList.get(i) - integerList.get(i-1);
-//            }
-//            if (currentValue > maxValue){
-//                maxValue = currentValue;
-//            }
-//            kcalData.add(new KcalData(i, currentValue));
-//        }
+//        kcalData.add(0, 40);
+//        kcalData.add(1, 99);
+//        kcalData.add(2, 82);
+//        kcalData.add(3, 37);
+//        kcalData.add(4, 12);
+//        kcalData.add(5, 2);
+//        kcalData.add(6, 11);
+//        kcalData.add(7, 5);
+//        kcalData.add(8, 0);
+        kcalData.add(0, 0);
+        kcalData.add(1, 1);
+        kcalData.add(2, 999);
+        Integer maxCalory;
+        if (kcalData.size() == 0){
+            maxCalory = 0;
+            kcalChartData.add(new KcalData(0,0));
+        }else {
+            maxCalory =(int)((Collections.max(kcalData) * 1.2f));
+            for (int i =0; i<kcalData.size();i++){
+                kcalChartData.add(new KcalData((i+1)*5, kcalData.get(i)));
+            }
+        }
 
-//        kcalData.add(new KcalData(0, 0));
-//        kcalData.add(new KcalData(1, 5));
-//        kcalData.add(new KcalData(2, 11));
-//        kcalData.add(new KcalData(3, 37));
-//        kcalData.add(new KcalData(4, 82));
-//        kcalData.add(new KcalData(5, 99));
-//        kcalData.add(new KcalData(6, 40));
+        int durTime = kcalChartData.size();
+        int intTenTotalTime = Math.round(durTime);
 
-//        kcalData.add(new KcalData(0, 40));
-//        kcalData.add(new KcalData(1, 99));
-//        kcalData.add(new KcalData(2, 82));
-//        kcalData.add(new KcalData(3, 37));
-//        kcalData.add(new KcalData(4, 11));
-//        kcalData.add(new KcalData(5, 5));
-//        kcalData.add(new KcalData(6, 0));
-        kcalData.add(new KcalData(0,0));
-
-        lineChartView.init(0, 0, kcalData);
+        lineChartView.init(intTenTotalTime, maxCalory, kcalChartData);
 
         lineChartView.startAnim();
         Log.i("test", "test");
