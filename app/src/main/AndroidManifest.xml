@@ -27,16 +27,20 @@
         </activity>
 
         <activity android:name=".LineChartActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ShadowRoundRectangleActivity"
             android:hardwareAccelerated="false"
             >
 
+        </activity>
+
+        <activity android:name=".DouyinRecordButtonActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
     </application>
