@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class DouyinRecordButtonActivity extends AppCompatActivity {
 
     private RecordButton recordButton;
+    private boolean isBluetoothConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,10 @@ public class DouyinRecordButtonActivity extends AppCompatActivity {
 
             @Override
             public void onDouYinClipStart() {
-                Toast.makeText(DouyinRecordButtonActivity.this, "剪辑开始", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DouyinRecordButtonActivity.this, "剪辑开始"+isBluetoothConnect, Toast.LENGTH_SHORT).show();
+                if (isBluetoothConnect){
+                    recordButton.startClip();
+                }
             }
 
             @Override
@@ -68,6 +72,14 @@ public class DouyinRecordButtonActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 recordButton.setBitmapPhoto(RecordButton.ModeClip);
+            }
+        });
+
+        Button button4 = findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isBluetoothConnect = !isBluetoothConnect;
             }
         });
     }

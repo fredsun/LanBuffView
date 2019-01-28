@@ -22,10 +22,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
+
 /**
- * @author ArcherYc
- * @date on 2018/7/11  下午2:28
- * @mail 247067345@qq.com
+ * @author fredsun
+ * @date on 2019/1/28  下午2:28
  */
 public class RecordButton extends View {
     private Bitmap bitmapPhoto;
@@ -144,7 +144,7 @@ public class RecordButton extends View {
         mMaxCircleStrokeWidth = dip2px(mContext, 12);
         circleStrokeWidth = mMinCircleStrokeWidth;
         mCirclePaint.setStrokeWidth(circleStrokeWidth);
-        mCurrentMode = ModeVideo;
+        mCurrentMode = ModeClip;
         mLittleResourcesId = R.drawable.icon_douyin_video_little;
         mLargeResourcesId= R.drawable.icon_douyin_video_large;
     }
@@ -242,13 +242,15 @@ public class RecordButton extends View {
                     if (mRecordMode == RecordMode.ORIGIN && inBeginRange(event)) {
 //                        mDownRawX = event.getRawX();
 //                        mDownRawY = event.getRawY();
-                        startBeginAnimation();
+
 //                        mHandler.postDelayed(mClickRunnable, 200);
                         if (mCurrentMode == ModeVideo){
                             mOnRecordStateChangedListener.onDouYinVideoStart();
+                            startBeginAnimation();
                         }
                         if (mCurrentMode == ModeClip){
-                            mOnRecordStateChangedListener.onDouYinClipStart();
+
+
                         }
                     }
                 }
@@ -282,7 +284,12 @@ public class RecordButton extends View {
                     }else {
                         if (mRecordMode == RecordMode.LONG_CLICK) {
                         } else if (mRecordMode == RecordMode.ORIGIN && inBeginRange(event)) {
-                            mRecordMode = RecordMode.SINGLE_CLICK;
+                            if (mCurrentMode == ModeClip){
+                                mOnRecordStateChangedListener.onDouYinClipStart();
+                            }else {
+                                mRecordMode = RecordMode.SINGLE_CLICK;
+                            }
+
                         } else if (mRecordMode == RecordMode.SINGLE_CLICK && inEndRange(event)) {
                             if (mCurrentMode == ModeVideo){
                                 mOnRecordStateChangedListener.onDouYinVideoFinish();
@@ -591,5 +598,10 @@ public class RecordButton extends View {
     public int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    public void startClip(){
+        startBeginAnimation();
+        mRecordMode = RecordMode.SINGLE_CLICK;
     }
 }
