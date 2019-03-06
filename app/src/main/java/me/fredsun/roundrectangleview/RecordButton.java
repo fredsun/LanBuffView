@@ -20,7 +20,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.widget.Toast;
 
 
 /**
@@ -96,7 +96,9 @@ public class RecordButton extends View {
     private int mCurrentMode = 0;
     private int mMaxCameraRectWidth;
     private int mMinCameraRectWidth;
-    private long inSaveActTime;
+    private long inSaveCameraActTime;
+    private long inSaveVideoActTime;
+    private long inSaveClipActTime;
 
 
     public RecordButton(Context context) {
@@ -232,8 +234,8 @@ public class RecordButton extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (mCurrentMode == ModeCamera){
-                    if ((System.currentTimeMillis() - inSaveActTime) < 2000) break;
-                    inSaveActTime = System.currentTimeMillis();
+                    if ((System.currentTimeMillis() - inSaveCameraActTime) < 2000) break;
+                    inSaveCameraActTime = System.currentTimeMillis();
                     mOnRecordStateChangedListener.onDouYinCameraClick();
                     mRecordMode = RecordMode.ORIGIN;
                     mBeginAnimatorSet.cancel();
@@ -245,6 +247,7 @@ public class RecordButton extends View {
 
 //                        mHandler.postDelayed(mClickRunnable, 200);
                         if (mCurrentMode == ModeVideo){
+                            inSaveVideoActTime = System.currentTimeMillis();
                             mOnRecordStateChangedListener.onDouYinVideoStart();
                             startBeginAnimation();
                         }
@@ -285,6 +288,7 @@ public class RecordButton extends View {
                         if (mRecordMode == RecordMode.LONG_CLICK) {
                         } else if (mRecordMode == RecordMode.ORIGIN && inBeginRange(event)) {
                             if (mCurrentMode == ModeClip){
+                                inSaveClipActTime = System.currentTimeMillis();
                                 mOnRecordStateChangedListener.onDouYinClipStart();
                             }else {
                                 mRecordMode = RecordMode.SINGLE_CLICK;
@@ -292,10 +296,24 @@ public class RecordButton extends View {
 
                         } else if (mRecordMode == RecordMode.SINGLE_CLICK && inEndRange(event)) {
                             if (mCurrentMode == ModeVideo){
-                                mOnRecordStateChangedListener.onDouYinVideoFinish();
+                                if ((System.currentTimeMillis() - inSaveVideoActTime) < 8000) {
+                                    mOnRecordStateChangedListener.onDouYinVideoYet();
+                                    break;
+                                }else {
+                                    inSaveVideoActTime = 0;
+                                    mOnRecordStateChangedListener.onDouYinVideoFinish();
+                                }
+
                             }
                             if (mCurrentMode == ModeClip){
-                                mOnRecordStateChangedListener.onDouYinClipFinish();
+                                if ((System.currentTimeMillis() - inSaveClipActTime) < 8000) {
+                                    mOnRecordStateChangedListener.onDouYinClipYet();
+                                    break;
+                                }else{
+                                    inSaveClipActTime = 0;
+                                    mOnRecordStateChangedListener.onDouYinClipFinish();
+                                }
+
                             }
                             resetSingleClick();
                         }
@@ -559,6 +577,8 @@ public class RecordButton extends View {
         void onDouYinVideoFinish();
         void onDouYinClipStart();
         void onDouYinClipFinish();
+        void onDouYinClipYet();
+        void onDouYinVideoYet();
     }
 
     private enum RecordMode {
