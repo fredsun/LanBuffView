@@ -49,6 +49,16 @@ public class DouyinRecordButtonActivity extends AppCompatActivity {
             public void onDouYinClipFinish() {
                 Toast.makeText(DouyinRecordButtonActivity.this, "剪辑结束", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onDouYinClipYet() {
+
+            }
+
+            @Override
+            public void onDouYinVideoYet() {
+
+            }
         });
 
         Button button1 = findViewById(R.id.button1);
